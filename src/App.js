@@ -8,7 +8,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      items: [{ id: 1, title: "itemOne" }, { id: 2, title: "itemTwo" }],
+      items: [],
       id: uuidv4(),
       item: "",
       editItem: false,
@@ -16,12 +16,29 @@ class App extends Component {
     }
   }
 
-  handleChange = (e) => { console.log("handlechange"); }
-  handleSubmit = (e) => { console.log("handleSubmit"); }
-  clearList = () => { console.log("handleSubmit"); }
-  handleDelete = (id) => { console.log("handleDelete"); }
-  handleDelete = (id) => { console.log("handleDelete"); }
-  handleEdit = (id) => { console.log("handleEdit"); }
+  handleChange = (e) => this.setState({ item: e.target.value })
+  handleSubmit = (e) => {
+    console.log("submit");
+    e.preventDefault();
+    const NewItem = { id: this.state.id, title: this.state.item }
+    const updatedItems = [...this.state.items, NewItem];
+    this.setState({ items: updatedItems, item: "", id: uuidv4(), editItem: false })
+  }
+  clearList = () => { this.setState({ items: [] }) }
+  handleDelete = (id) => {
+    const filterdItems = this.state.items.filter(item => item.id !== id);
+    this.setState({ items: filterdItems });
+  }
+  handleEdit = (id) => {
+    const filterdItems = this.state.items.filter(item => item.id !== id);
+    const selectedItem = this.state.items.find(item => item.id === id);
+    this.setState({
+      items: filterdItems,
+      item: selectedItem.title,
+      id: id,
+      editItem: true
+    })
+  }
 
   render() {
     const { item, editItem, items } = this.state;
